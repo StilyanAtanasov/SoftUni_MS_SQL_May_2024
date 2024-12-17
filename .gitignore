@@ -3,4 +3,4 @@
 *.pdf
 
 # Exclude .vs folders
-*.vs/
+**.vs/
