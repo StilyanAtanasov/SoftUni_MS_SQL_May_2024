@@ -1,0 +1,9 @@
+USE [Bank]
+GO
+
+CREATE FUNCTION [ufn_CalculateFutureValue] (@I MONEY, @R DECIMAL(15,10), @T INT) 
+RETURNS DECIMAL (18, 4)
+AS
+BEGIN
+        RETURN @I * POWER((1 + @R), @T)
+END
