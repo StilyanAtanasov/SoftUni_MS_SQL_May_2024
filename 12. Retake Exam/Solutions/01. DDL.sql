@@ -1,0 +1,47 @@
+CREATE DATABASE [ShoesApplicationDatabase];
+GO
+
+USE [ShoesApplicationDatabase];
+GO
+
+CREATE TABLE [Users] (
+    [Id] INT IDENTITY CONSTRAINT [PK_Users_Id] PRIMARY KEY,
+    [Username] NVARCHAR(50) NOT NULL CONSTRAINT [UQ_Users_Username] UNIQUE,
+    [FullName] NVARCHAR(100) NOT NULL,
+    [PhoneNumber] NVARCHAR(15) NULL,
+    [Email] NVARCHAR(100) NOT NULL CONSTRAINT [UQ_Users_Email] UNIQUE
+);
+
+CREATE TABLE [Brands] (
+    [Id] INT IDENTITY  CONSTRAINT [PK_Brands_Id] PRIMARY KEY,
+    [Name] NVARCHAR(50) NOT NULL CONSTRAINT [UQ_Brands_Name] UNIQUE
+);
+
+CREATE TABLE [Sizes] (
+    [Id] INT IDENTITY CONSTRAINT [PK_Sizes_Id] PRIMARY KEY,
+    [EU] DECIMAL(5, 2) NOT NULL,
+    [US] DECIMAL(5, 2) NOT NULL,
+    [UK] DECIMAL(5, 2) NOT NULL,
+    [CM] DECIMAL(5, 2) NOT NULL,
+    [IN] DECIMAL(5, 2) NOT NULL
+);
+
+CREATE TABLE [Shoes] (
+    [Id] INT IDENTITY CONSTRAINT [PK_Shoes_Id] PRIMARY KEY,
+    [Model] NVARCHAR(30) NOT NULL,
+    [Price] DECIMAL(10, 2) NOT NULL,
+    [BrandId] INT NOT NULL CONSTRAINT [FK_Shoes-BrandId_Brands-Id] FOREIGN KEY REFERENCES [Brands]([Id])
+);
+
+CREATE TABLE [Orders] (
+    [Id] INT IDENTITY CONSTRAINT [PK_Orders_Id] PRIMARY KEY ,
+    [ShoeId] INT NOT NULL CONSTRAINT [FK_Orders-ShoeId_Shoes-Id] FOREIGN KEY REFERENCES [Shoes]([Id]),
+    [SizeId] INT NOT NULL CONSTRAINT [FK_Orders-SizeId_Sizes-Id] FOREIGN KEY REFERENCES [Sizes]([Id]),
+    [UserId] INT NOT NULL CONSTRAINT [FK_Orders-UserId_Users-Id] FOREIGN KEY REFERENCES [Users]([Id])
+);
+
+CREATE TABLE [ShoesSizes] (
+    [ShoeId] INT NOT NULL CONSTRAINT [FK_ShoesSizes-ShoeId_Shoes-Id] FOREIGN KEY REFERENCES [Shoes]([Id]),
+    [SizeId] INT NOT NULL CONSTRAINT [FK_ShoesSizes-SizeId_Sizes-Id] FOREIGN KEY REFERENCES [Sizes]([Id]),
+    CONSTRAINT [PK_ShoesSizes_ShoeId_SizeId] PRIMARY KEY ([ShoeId], [SizeId])
+);
